@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class DiscountDto {
     private Long id;
-    private Channel channel;
+    private ChannelDto channelDto;
     private double percent;
     private Date startDate;
     private Date endDate;

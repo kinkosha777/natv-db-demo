@@ -2,6 +2,8 @@ package kg.megacom.natvdbdemo.dao;
 
 import kg.megacom.natvdbdemo.models.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OrderRepository extends JpaRepository<Long, Order> {
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Long> {
 }

@@ -13,33 +13,32 @@ import java.util.List;
 public class DayServiceImpl implements DayService {
     @Autowired
     DayRepository dayRepository;
-    @Autowired
-    DayMapper dayMapper;
+
     @Override
     public DayDto save(DayDto dayDto) {
-        Day day = dayMapper.toDay(dayDto);
+        Day day = DayMapper.INSTANCE.toDay(dayDto);
         day = dayRepository.save(day);
-        return dayMapper.toDayDto(day);
+        return DayMapper.INSTANCE.toDayDto(day);
     }
 
     @Override
     public DayDto update(DayDto dayDto) {
     if (!dayRepository.existsById(dayDto.getId()))
         throw new RuntimeException("День не найден!");
-    Day day = dayMapper.toDay(dayDto);
+    Day day = DayMapper.INSTANCE.toDay(dayDto);
     day = dayRepository.save(day);
-        return dayMapper.toDayDto(day);
+        return DayMapper.INSTANCE.toDayDto(day);
     }
 
     @Override
     public List<DayDto> findAll() {
-        return dayMapper.toDaysDtos(dayRepository.findAll());
+        return DayMapper.INSTANCE.toDaysDtos(dayRepository.findAll());
     }
 
     @Override
     public DayDto findById(Long id) {
         Day day  = dayRepository.findById(id).orElseThrow(()->new RuntimeException("День не найден!"));
 
-        return dayMapper.toDayDto(day);
+        return DayMapper.INSTANCE.toDayDto(day);
     }
 }

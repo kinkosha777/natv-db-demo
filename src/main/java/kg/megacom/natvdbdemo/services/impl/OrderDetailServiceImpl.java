@@ -14,33 +14,32 @@ import java.util.List;
 public class OrderDetailServiceImpl implements OrderDetailService {
     @Autowired
     OrderDetailRepository orderDetailRepository;
-    @Autowired
-    OrderDetailMapper orderDetailMapper;
+
     @Override
     public OrderDetailDto save(OrderDetailDto orderDetailDto) {
-        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDto);
+        OrderDetail orderDetail = OrderDetailMapper.INSTANCE.toOrderDetail(orderDetailDto);
         orderDetail = orderDetailRepository.save(orderDetail);
 
-        return orderDetailMapper.toOrderDetailDto(orderDetail);
+        return OrderDetailMapper.INSTANCE.toOrderDetailDto(orderDetail);
     }
 
     @Override
     public OrderDetailDto update(OrderDetailDto orderDetailDto) {
         if (!orderDetailRepository.existsById(orderDetailDto.getId()))
             throw new RuntimeException("ОрдерДетайл не найден!");
-        OrderDetail orderDetail = orderDetailMapper.toOrderDetail(orderDetailDto);
+        OrderDetail orderDetail = OrderDetailMapper.INSTANCE.toOrderDetail(orderDetailDto);
         orderDetail = orderDetailRepository.save(orderDetail);
-        return orderDetailMapper.toOrderDetailDto(orderDetail);
+        return OrderDetailMapper.INSTANCE.toOrderDetailDto(orderDetail);
     }
 
     @Override
     public List<OrderDetailDto> findAll() {
-        return orderDetailMapper.toOrderDetailDtos(orderDetailRepository.findAll());
+        return OrderDetailMapper.INSTANCE.toOrderDetailDtos(orderDetailRepository.findAll());
     }
 
     @Override
     public OrderDetailDto findById(Long id) {
         OrderDetail orderDetail = orderDetailRepository.findById(id).orElseThrow(()->new RuntimeException("ОрдерДетайл не найден!"));
-        return orderDetailMapper.toOrderDetailDto(orderDetail);
+        return OrderDetailMapper.INSTANCE.toOrderDetailDto(orderDetail);
     }
 }

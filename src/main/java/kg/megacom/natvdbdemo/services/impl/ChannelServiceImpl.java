@@ -13,34 +13,36 @@ import java.util.List;
 public class ChannelServiceImpl implements ChannelService {
     @Autowired
     ChannelRepository channelRepository;
-    @Autowired
-    ChannelMapper channelMapper;
+//    @Autowired
+//    ChannelMapper channelMapper = ChannelMapper.INSTANCE;
+
     @Override
     public ChannelDto save(ChannelDto channelDto) {
-        Channel channel = channelMapper.toChannel(channelDto);
+        Channel channel = ChannelMapper.INSTANCE.toChannel(channelDto);
         channel = channelRepository.save(channel);
-        return channelMapper.toChannelDto(channel);
+        return ChannelMapper.INSTANCE.toChannelDto(channel);
     }
 
     @Override
     public ChannelDto update(ChannelDto channelDto) {
         if (!channelRepository.existsById(channelDto.getId()))
             throw new RuntimeException("Канал не найден!");
-        Channel channel = channelMapper.toChannel(channelDto);
+        Channel channel = ChannelMapper.INSTANCE.toChannel(channelDto);
         channel = channelRepository.save(channel);
-        return channelMapper.toChannelDto(channel);
+        return ChannelMapper.INSTANCE.toChannelDto(channel);
     }
 
     @Override
     public List<ChannelDto> findAll() {
 
-        return channelMapper.toChannelsDtos(channelRepository.findAll());
+        return ChannelMapper.INSTANCE.toChannelsDtos(channelRepository.findAll());
     }
 
     @Override
     public ChannelDto findById(Long id) {
-        Channel channel = channelRepository.findById(id).orElseThrow(()->new RuntimeException("Канал не найден!"));
+        Channel channel = channelRepository.findById(id).orElseThrow(()->
+                new RuntimeException("Канал не найден!"));
 
-        return channelMapper.toChannelDto(channel);
+        return ChannelMapper.INSTANCE.toChannelDto(channel);
     }
 }

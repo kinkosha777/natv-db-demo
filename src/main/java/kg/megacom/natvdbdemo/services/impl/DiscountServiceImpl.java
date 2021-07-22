@@ -13,32 +13,31 @@ import java.util.List;
 public class DiscountServiceImpl implements DiscountService {
     @Autowired
     DiscountRepository discountRepository;
-    @Autowired
-    DiscountMapper discountMapper;
+
     @Override
     public DiscountDto save(DiscountDto discountDto) {
-        Discount discount = discountMapper.toDiscount(discountDto);
+        Discount discount = DiscountMapper.INSTANCE.toDiscount(discountDto);
         discount = discountRepository.save(discount);
-        return discountMapper.toDiscountDto(discount);
+        return DiscountMapper.INSTANCE.toDiscountDto(discount);
     }
 
     @Override
     public DiscountDto update(DiscountDto discountDto) {
         if (!discountRepository.existsById(discountDto.getId()))
             throw  new RuntimeException("Дискоунт не найден!");
-        Discount discount = discountMapper.toDiscount(discountDto);
+        Discount discount = DiscountMapper.INSTANCE.toDiscount(discountDto);
         discount = discountRepository.save(discount);
-        return discountMapper.toDiscountDto(discount);
+        return DiscountMapper.INSTANCE.toDiscountDto(discount);
     }
 
     @Override
     public List<DiscountDto> findAll() {
-        return discountMapper.toDiscountsDtos(discountRepository.findAll());
+        return DiscountMapper.INSTANCE.toDiscountsDtos(discountRepository.findAll());
     }
 
     @Override
     public DiscountDto findById(Long id) {
     Discount discount = discountRepository.findById(id).orElseThrow(()->new RuntimeException("Дискаунт не найден!"));
-        return discountMapper.toDiscountDto(discount);
+        return DiscountMapper.INSTANCE.toDiscountDto(discount);
     }
 }

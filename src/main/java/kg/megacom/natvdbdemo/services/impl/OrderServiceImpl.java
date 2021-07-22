@@ -13,32 +13,31 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderRepository orderRepository;
-    @Autowired
-    OrderMapper orderMapper;
+
     @Override
     public OrderDto save(OrderDto orderDto) {
-        Order order = orderMapper.toOrder(orderDto);
+        Order order = OrderMapper.INSTANCE.toOrder(orderDto);
         order = orderRepository.save(order);
-        return orderMapper.toOrderDto(order);
+        return OrderMapper.INSTANCE.toOrderDto(order);
     }
 
     @Override
     public OrderDto update(OrderDto orderDto) {
         if (!orderRepository.existsById(orderDto.getId()))
             throw new RuntimeException("Ордер не найден!");
-        Order order = orderMapper.toOrder(orderDto);
+        Order order = OrderMapper.INSTANCE.toOrder(orderDto);
         order = orderRepository.save(order);
-        return orderMapper.toOrderDto(order);
+        return OrderMapper.INSTANCE.toOrderDto(order);
     }
 
     @Override
     public List<OrderDto> findAll() {
-        return orderMapper.toOrderDtos(orderRepository.findAll());
+        return OrderMapper.INSTANCE.toOrderDtos(orderRepository.findAll());
     }
 
     @Override
     public OrderDto findById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(()->new RuntimeException("Ордер не найден!"));
-        return orderMapper.toOrderDto(order);
+        return OrderMapper.INSTANCE.toOrderDto(order);
     }
 }

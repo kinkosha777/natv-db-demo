@@ -13,33 +13,32 @@ import java.util.List;
 public class PriceServiceImpl implements PriceService {
     @Autowired
     PriceRepository priceRepository;
-    @Autowired
-    PriceMapper priceMapper;
+
     @Override
     public PriceDto save(PriceDto priceDto) {
-        Price price = priceMapper.toPrice(priceDto);
+        Price price = PriceMapper.INSTANCE.toPrice(priceDto);
         price = priceRepository.save(price);
-        return priceMapper.toPriceDto(price);
+        return PriceMapper.INSTANCE.toPriceDto(price);
     }
 
     @Override
     public PriceDto update(PriceDto priceDto) {
         if (!priceRepository.existsById(priceDto.getId()))
             throw new RuntimeException("Прайс не найден!");
-        Price price = priceMapper.toPrice(priceDto);
+        Price price = PriceMapper.INSTANCE.toPrice(priceDto);
         price = priceRepository.save(price);
-        return priceMapper.toPriceDto(price);
+        return PriceMapper.INSTANCE.toPriceDto(price);
     }
 
     @Override
     public List<PriceDto> findAll() {
-        return priceMapper.toPriceDtos(priceRepository.findAll());
+        return PriceMapper.INSTANCE.toPriceDtos(priceRepository.findAll());
     }
 
     @Override
     public PriceDto findById(Long id) {
         Price price = priceRepository.findById(id).orElseThrow(()->new RuntimeException("Прайс не найден!"));
 
-        return priceMapper.toPriceDto(price);
+        return PriceMapper.INSTANCE.toPriceDto(price);
     }
 }

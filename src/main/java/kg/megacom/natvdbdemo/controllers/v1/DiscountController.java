@@ -1,35 +1,25 @@
 package kg.megacom.natvdbdemo.controllers.v1;
 
-import kg.megacom.natvdbdemo.controllers.BaseCrudController;
 import kg.megacom.natvdbdemo.models.dto.DiscountDto;
+import kg.megacom.natvdbdemo.models.toFrontEnd.InputDiscountData;
 import kg.megacom.natvdbdemo.services.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 @RestController
 @RequestMapping("api/v1/discount")
-public class DiscountController implements BaseCrudController<DiscountDto,Long> {
+public class DiscountController  {
     @Autowired
-    DiscountService discountService;
-    @Override
-    public DiscountDto save(DiscountDto discountDto) {
-        return discountService.save(discountDto);
+    private DiscountService discountService;
+
+    @PostMapping("/save-discount")
+
+    public DiscountDto saveNewDiscountForChannel(@RequestBody InputDiscountData inputDiscountData){
+        System.out.println(inputDiscountData);
+        return discountService.saveNewDiscountForChannel(inputDiscountData);
     }
 
-    @Override
-    public DiscountDto update(DiscountDto discountDto) {
-        return discountService.save(discountDto);
-    }
 
-    @Override
-    public List<DiscountDto> findAll() {
-        return discountService.findAll();
-    }
-
-    @Override
-    public DiscountDto findById(Long id) {
-        return discountService.findById(id);
-    }
 }

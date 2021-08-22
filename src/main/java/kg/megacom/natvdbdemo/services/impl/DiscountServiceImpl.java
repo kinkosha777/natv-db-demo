@@ -1,9 +1,12 @@
 package kg.megacom.natvdbdemo.services.impl;
 
+import kg.megacom.natvdbdemo.dao.ChannelRepository;
 import kg.megacom.natvdbdemo.dao.DiscountRepository;
 import kg.megacom.natvdbdemo.mappers.DiscountMapper;
-import kg.megacom.natvdbdemo.models.Discount;
 import kg.megacom.natvdbdemo.models.dto.DiscountDto;
+import kg.megacom.natvdbdemo.models.toFrontEnd.DiscountData;
+import kg.megacom.natvdbdemo.models.toFrontEnd.InputDiscountData;
+import kg.megacom.natvdbdemo.services.ChannelService;
 import kg.megacom.natvdbdemo.services.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,31 +16,29 @@ import java.util.List;
 public class DiscountServiceImpl implements DiscountService {
     @Autowired
     DiscountRepository discountRepository;
+    @Autowired
+    ChannelService channelService;
 
     @Override
-    public DiscountDto save(DiscountDto discountDto) {
-        Discount discount = DiscountMapper.INSTANCE.toDiscount(discountDto);
-        discount = discountRepository.save(discount);
-        return DiscountMapper.INSTANCE.toDiscountDto(discount);
+    public DiscountDto saveNewDiscountForChannel(InputDiscountData inputDiscountData) {
+       DiscountDto discountDto = new DiscountDto();
+       discountDto.setChannel(channelService.findById(inputDiscountData.getChannelId()));
+       discountDto.setPercent(inputDiscountData.getPercent());
+       discountDto.setStartDate(inputDiscountData.getStartDate());
+       discountDto.setEndDate(inputDiscountData.getEndDate());
+       discountDto.setMindDays(inputDiscountData.getMinDays());
+        System.out.println(discountDto);
+        return DiscountMapper.INSTANCE.toDiscountDto(discountRepository.save(DiscountMapper.INSTANCE.toDiscount(discountDto)));
+
     }
 
     @Override
-    public DiscountDto update(DiscountDto discountDto) {
-        if (!discountRepository.existsById(discountDto.getId()))
-            throw  new RuntimeException("Дискоунт не найден!");
-        Discount discount = DiscountMapper.INSTANCE.toDiscount(discountDto);
-        discount = discountRepository.save(discount);
-        return DiscountMapper.INSTANCE.toDiscountDto(discount);
+    public List<DiscountDto> allActiveChannelDiscounts(Long id) {
+        return DiscountMapper.INSTANCE.toDiscountsDtos(discountRepository.allActiveChannelDiscounts(id));
     }
 
     @Override
-    public List<DiscountDto> findAll() {
-        return DiscountMapper.INSTANCE.toDiscountsDtos(discountRepository.findAll());
-    }
-
-    @Override
-    public DiscountDto findById(Long id) {
-    Discount discount = discountRepository.findById(id).orElseThrow(()->new RuntimeException("Дискаунт не найден!"));
-        return DiscountMapper.INSTANCE.toDiscountDto(discount);
+    public DiscountDto findByChannelAndMinDay(int days, Long id) {
+        return DiscountMapper.INSTANCE.toDiscountDto(discountRepository.findByTvChannelAndMinDay(days,id));
     }
 }

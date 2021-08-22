@@ -10,26 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 @RestController
 @RequestMapping("api/v1/day")
-public class DayController implements BaseCrudController<DayDto,Long> {
+public class DayController  {
     @Autowired
     DayService dayService;
-    @Override
-    public DayDto save(DayDto dayDto) {
-        return dayService.save(dayDto);
-    }
 
-    @Override
-    public DayDto update(DayDto dayDto) {
-        return dayService.save(dayDto);
-    }
-
-    @Override
-    public List<DayDto> findAll() {
-        return dayService.findAll();
-    }
-
-    @Override
-    public DayDto findById(Long id) {
-        return dayService.findById(id);
-    }
 }

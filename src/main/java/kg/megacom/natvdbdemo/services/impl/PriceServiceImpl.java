@@ -4,6 +4,8 @@ import kg.megacom.natvdbdemo.dao.PriceRepository;
 import kg.megacom.natvdbdemo.mappers.PriceMapper;
 import kg.megacom.natvdbdemo.models.Price;
 import kg.megacom.natvdbdemo.models.dto.PriceDto;
+import kg.megacom.natvdbdemo.models.toFrontEnd.InputPriceData;
+import kg.megacom.natvdbdemo.services.ChannelService;
 import kg.megacom.natvdbdemo.services.PriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,32 +15,29 @@ import java.util.List;
 public class PriceServiceImpl implements PriceService {
     @Autowired
     PriceRepository priceRepository;
+    @Autowired
+    ChannelService channelService;
+
 
     @Override
-    public PriceDto save(PriceDto priceDto) {
-        Price price = PriceMapper.INSTANCE.toPrice(priceDto);
-        price = priceRepository.save(price);
-        return PriceMapper.INSTANCE.toPriceDto(price);
+    public PriceDto savePriceForChannel(InputPriceData inputPriceData) {
+        PriceDto priceDto = new PriceDto();
+        priceDto.setChannel(channelService.findChanelByIdForDiscount(inputPriceData.getChannelId()));
+        priceDto.setStartDate(inputPriceData.getStartDate());
+        priceDto.setEndDate(inputPriceData.getEndDate());
+        priceDto.setPrice(inputPriceData.getPrice());
+        System.out.println(priceDto);
+        return PriceMapper.INSTANCE.toPriceDto(priceRepository.save(PriceMapper.INSTANCE.toPrice(priceDto)));
     }
 
     @Override
-    public PriceDto update(PriceDto priceDto) {
-        if (!priceRepository.existsById(priceDto.getId()))
-            throw new RuntimeException("Прайс не найден!");
-        Price price = PriceMapper.INSTANCE.toPrice(priceDto);
-        price = priceRepository.save(price);
-        return PriceMapper.INSTANCE.toPriceDto(price);
+    public List<PriceDto> allActiveChannelsPrice() {
+        // sout priceRepository.findAll()
+        return PriceMapper.INSTANCE.toPriceDtos(priceRepository.allActiveChannelsPrices());
     }
 
     @Override
-    public List<PriceDto> findAll() {
-        return PriceMapper.INSTANCE.toPriceDtos(priceRepository.findAll());
-    }
-
-    @Override
-    public PriceDto findById(Long id) {
-        Price price = priceRepository.findById(id).orElseThrow(()->new RuntimeException("Прайс не найден!"));
-
-        return PriceMapper.INSTANCE.toPriceDto(price);
+    public PriceDto findByChannelAndDate(Long id) {
+        return PriceMapper.INSTANCE.toPriceDto(priceRepository.findByChannelAndDate(id));
     }
 }
